@@ -95,10 +95,6 @@ func main() {
 		WebRoot:   "/baz",
 	}
 
-	redirectURL := fmt.Sprintf("%s?cp=%s", getToken, merchantID)
-
-	log.Printf("Redirect URL: %s\n", redirectURL)
-
 	http.HandleFunc("/api/songs/", func(w http.ResponseWriter, r *http.Request) {
 		enc := json.NewEncoder(w)
 		localCatalog := catalog[:]
@@ -137,7 +133,13 @@ func main() {
 		Token := r.URL.Query().Get("lptoken")
 
 		if Token == "" {
-			http.Redirect(w, r, redirectURL, 301)
+			u, err := c.GetTokenURL("http://46.101.229.91/")
+			if err != nil {
+				http.Error(w, fmt.Sprintf("%s", err), 400)
+				return
+			}
+
+			http.Redirect(w, r, u, 302)
 			return
 		}
 
@@ -151,5 +153,5 @@ func main() {
 
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", fs)
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
