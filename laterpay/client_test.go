@@ -10,10 +10,10 @@ func TestClient(t *testing.T) {
 
 	c := LaterPayClient{
 		Id:        "myid",
-		secretKey: []byte("mysecret"),
-		addURL:    "https://foo.bar/add",
-		accessURL: "https://api.foo.bar/access",
-		webRoot:   "https://foo.bar",
+		SecretKey: []byte("mysecret"),
+		AddURL:    "https://foo.bar/add",
+		AccessURL: "https://api.foo.bar/access",
+		WebRoot:   "https://foo.bar",
 	}
 
 	i := ItemDefinition{

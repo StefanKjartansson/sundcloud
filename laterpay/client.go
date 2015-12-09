@@ -23,10 +23,10 @@ type LaterPayClient struct {
 	// parse access response.
 	//client    http.Client
 	Id        string
-	secretKey []byte
-	addURL    string
-	accessURL string
-	webRoot   string
+	SecretKey []byte
+	AddURL    string
+	AccessURL string
+	WebRoot   string
 }
 
 func (c *LaterPayClient) makeURL(baseURL, method string, params interface{}) (string, error) {
@@ -41,16 +41,16 @@ func (c *LaterPayClient) makeURL(baseURL, method string, params interface{}) (st
 		}
 		u.RawQuery = qs.Encode()
 	}
-	err = signURL(c.secretKey, method, u)
+	err = signURL(c.SecretKey, method, u)
 	return u.String(), nil
 }
 
 func (c *LaterPayClient) dialogURL(u string) string {
-	return fmt.Sprintf("%s/dialog-api?url=%s", c.webRoot, url.QueryEscape(u))
+	return fmt.Sprintf("%s/dialog-api?url=%s", c.WebRoot, url.QueryEscape(u))
 }
 
 func (c *LaterPayClient) Add(i ItemDefinition) (string, error) {
-	u, err := c.makeURL(c.addURL, "GET", &i)
+	u, err := c.makeURL(c.AddURL, "GET", &i)
 	if err != nil {
 		return "", err
 	}
@@ -67,7 +67,7 @@ func (c *LaterPayClient) Access(token string, ids ...string) map[string]bool {
 		Token: token,
 		Ids:   ids,
 	}
-	u, err := c.makeURL(c.accessURL, "GET", ap)
+	u, err := c.makeURL(c.AccessURL, "GET", ap)
 	if err != nil {
 		return nil
 	}
