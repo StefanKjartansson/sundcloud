@@ -2,6 +2,8 @@ package laterpay
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 	"net/url"
 	"time"
 
@@ -25,8 +27,7 @@ type LaterPayClient struct {
 	//client    http.Client
 	Id        string
 	SecretKey []byte
-	AddURL    string
-	AccessURL string
+	APIRoot   string
 	WebRoot   string
 }
 
@@ -51,7 +52,7 @@ func (c *LaterPayClient) dialogURL(u string) string {
 }
 
 func (c *LaterPayClient) Add(i ItemDefinition) (string, error) {
-	u, err := c.makeURL(c.AddURL, "GET", &i)
+	u, err := c.makeURL(fmt.Sprintf("%s/dialog/add", c.WebRoot), "GET", &i)
 	if err != nil {
 		return "", err
 	}
@@ -59,20 +60,28 @@ func (c *LaterPayClient) Add(i ItemDefinition) (string, error) {
 }
 
 type accessParams struct {
-	Ids   []string `url:"article_id"`
-	Token string   `url:"lptoken"`
+	Merchant string   `url:"cp"`
+	Ids      []string `url:"article_id"`
+	Token    string   `url:"lptoken"`
 }
 
 func (c *LaterPayClient) Access(token string, ids ...string) map[string]bool {
 	ap := accessParams{
-		Token: token,
-		Ids:   ids,
+		Token:    token,
+		Ids:      ids,
+		Merchant: c.Id,
 	}
-	u, err := c.makeURL(c.AccessURL, "GET", ap)
+	u, err := c.makeURL(fmt.Sprintf("%s/access", c.APIRoot), "GET", ap)
 	if err != nil {
 		return nil
 	}
 	fmt.Println(u)
+
+	resp, err := http.Get(u)
+
+	log.Printf("%q", resp)
+	log.Printf("%q", err)
+
 	return nil
 }
 
