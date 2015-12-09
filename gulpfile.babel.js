@@ -18,7 +18,7 @@ gulp.task('clean', (cb) => {
 gulp.task('watch', ['webpack-dev-server']);
 
 // Production build
-gulp.task('build', ['clean', 'webpack:build', 'css-build']);
+gulp.task('build', ['clean', 'webpack:build']);
 
 gulp.task('webpack:build', (callback) => {
   // modify some webpack config options
