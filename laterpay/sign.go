@@ -66,7 +66,7 @@ func sign(secret []byte, method string, u *url.URL) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	mac := hmac.New(sha256.New, secret)
+	mac := hmac.New(sha256.New224, secret)
 	mac.Write([]byte(msg))
 	return hex.EncodeToString(mac.Sum(nil)), nil
 }

@@ -3,6 +3,7 @@ package laterpay
 import (
 	"fmt"
 	"net/url"
+	"time"
 
 	"github.com/google/go-querystring/query"
 )
@@ -76,11 +77,12 @@ func (c *LaterPayClient) Access(token string, ids ...string) map[string]bool {
 }
 
 type tokenParams struct {
-	Redir    string `url:"redir"`
-	Merchant string `url:"cp"`
+	Redir     string `url:"redir"`
+	Merchant  string `url:"cp"`
+	TimeStamp int64  `url:"ts"`
 }
 
 func (c *LaterPayClient) GetTokenURL(redir string) (string, error) {
-	tp := tokenParams{redir, c.Id}
+	tp := tokenParams{redir, c.Id, time.Now().Unix()}
 	return c.makeURL("https://api.sandbox.laterpaytest.net/gettoken", "GET", tp)
 }

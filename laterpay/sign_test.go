@@ -49,3 +49,11 @@ func TestCreateMessageWrongMethod(t *testing.T) {
 	_, err = baseMessage("WRONG", u, url.Values{})
 	assert.NotNil(t, err)
 }
+
+func TestSignAndEncode2(t *testing.T) {
+	u, err := url.Parse("https://api.sandbox.laterpaytest.net/access?cp=234")
+	assert.Nil(t, err)
+	secret := []byte("mysecret")
+	err = signURL(secret, "GET", u)
+	assert.Nil(t, err)
+}
