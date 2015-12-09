@@ -18,6 +18,11 @@ export class API {
 
   constructor(apiURL) {
     this.url = apiURL;
+    this.token = null;
+  }
+
+  setToken(token) {
+    this.token = token;
   }
 
   makeRequest(path, method='GET') {
@@ -26,8 +31,8 @@ export class API {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'X-LP-Token': this.token,
       },
-      credentials: 'include',
     };
     return fetch(`${this.url}/${path}`, context);
   }

@@ -9,6 +9,12 @@ import Master from './Master';
 import List from './List';
 import Song from './song';
 import history from './history';
+import Service from './Service';
+
+const target = document.getElementById('container');
+const token = target.getAttribute('data-token');
+
+Service.setToken(token);
 
 render((
   <Router history={history} >
@@ -17,5 +23,4 @@ render((
       <Route path="/song/:songId" component={Song}/>
     </Route>
   </Router>
-),
-document.getElementById('container'));
+), target);
