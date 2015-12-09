@@ -74,3 +74,13 @@ func (c *LaterPayClient) Access(token string, ids ...string) map[string]bool {
 	fmt.Println(u)
 	return nil
 }
+
+type tokenParams struct {
+	Redir    string `url:"redir"`
+	Merchant string `url:"cp"`
+}
+
+func (c *LaterPayClient) GetTokenURL(redir string) (string, error) {
+	tp := tokenParams{redir, c.Id}
+	return c.makeURL("https://api.sandbox.laterpaytest.net/gettoken", "GET", tp)
+}

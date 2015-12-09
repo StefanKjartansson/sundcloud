@@ -1,0 +1,4 @@
+=== RUN TestClient
+--- FAIL: TestClient (0.00s)
+exit status 2
+FAIL	github.com/StefanKjartansson/sundcloud/laterpay	0.007s
