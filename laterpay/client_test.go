@@ -30,17 +30,3 @@ func TestClient(t *testing.T) {
 	c.Access("foobar213", "1", "2", "3")
 
 }
-
-/*
-LP signed request to https://localthing:3333
-
-localhost:3333
-	-> middleware?
-		find cp param in store
-		parse request & verify signature.
-
-
-/create-token
-	->
-
-*/
