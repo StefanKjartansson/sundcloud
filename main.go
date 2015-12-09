@@ -31,9 +31,8 @@ func init() {
 	c = laterpay.LaterPayClient{
 		Id:        merchantID,
 		SecretKey: []byte(merchantSecret),
-		AddURL:    "/foo",
-		AccessURL: "/bar",
-		WebRoot:   "/baz",
+		APIRoot:   "https://api.sandbox.laterpaytest.net",
+		WebRoot:   "https://web.sandbox.laterpaytest.net",
 	}
 	catalog = []Song{
 		{uuid.NewV4().String(), "Adele", "Hello", "http://lorempixel.com/200/100/", "/mp3/adele.mp3", true},
@@ -128,24 +127,20 @@ func API(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	accessStats := c.Access(token, ids...)
 
-	for id, access := range accessStats {
-		if access {
-			continue
-		}
-		for idx, l := range localCatalog {
-			if l.Id == id {
-				i := laterpay.ItemDefinition{
-					Id:      id,
-					Pricing: "EUR23",
-					Title:   l.Title,
-				}
-				url, err := c.Add(i)
-				if err != nil {
-					log.Println(err)
-				}
-				localCatalog[idx].Url = url
-				localCatalog[idx].Access = false
+	for idx, l := range localCatalog {
+		v, ok := accessStats[l.Id]
+		if !ok || !v {
+			i := laterpay.ItemDefinition{
+				Id:      l.Id,
+				Pricing: "EUR23",
+				Title:   l.Title,
 			}
+			url, err := c.Add(i)
+			if err != nil {
+				log.Println(err)
+			}
+			localCatalog[idx].Url = url
+			localCatalog[idx].Access = false
 		}
 	}
 
